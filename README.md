@@ -1,2 +1,2 @@
 * Pull code and run `npm install`.
-* Run `npm run server` to start the server.
+* Execute `npm run server` to start the server.
