@@ -3,6 +3,9 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+// Require dotenv
+require('dotenv').config();
+
 // Import files from `routes` folder
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
