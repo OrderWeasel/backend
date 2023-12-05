@@ -22,9 +22,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Use routes
+// Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+// API Routes
 app.use('/api', helloworldRouter);
 
 module.exports = app;
