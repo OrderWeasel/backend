@@ -1,33 +1,14 @@
+// Require dotenv
+require('dotenv').config();
+
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
-const { Client } = require('pg');
+const { connectDatabase } = require('./config/db');
 
-// Require dotenv
-require('dotenv').config();
-
-// Connect to database
-const client = new Client({
-  user: `${process.env.DB_USER}`,
-  password: `${process.env.DB_PASSWORD}`,
-  host: `${process.env.DB_HOST}`,
-  port: 5432,
-  database: 'orderweasel_db',
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
-
-const connectDatabase = async () => {
-  try {
-    await client.connect();
-    console.log('Connected to database!');
-  } catch (error) {
-    console.log(error);
-  }
-};
+// Connect to AWS RDS PostgreSQL database
 connectDatabase();
 
 // Import files from `routes` folder
