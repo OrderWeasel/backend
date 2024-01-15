@@ -14,7 +14,6 @@ connectDatabase();
 // Import files from `routes` folder
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const helloworldRouter = require('./routes/api/helloworld');
 const merchantRouter = require('./routes/api/merchant/index');
 
 const app = express();
@@ -32,7 +31,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // API Routes
-app.use('/api', helloworldRouter);
-app.use('/api', merchantRouter);
+app.use('/api/merchant', merchantRouter);
 
 module.exports = app;
