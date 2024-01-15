@@ -15,7 +15,7 @@ connectDatabase();
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const helloworldRouter = require('./routes/api/helloworld');
-const merchantRouter = require('./routes/api/merchant');
+const merchantRouter = require('./routes/api/merchant/index');
 
 const app = express();
 

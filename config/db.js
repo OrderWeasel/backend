@@ -19,6 +19,7 @@ const connectDatabase = async () => {
     await client.connect();
     console.log('Connected to database!');
   } catch (error) {
+    console.log('Something went wrong');
     console.log(error);
   }
 };
