@@ -68,7 +68,7 @@ router.delete('/:id', async (req, res) => {
     await db.query(`DELETE FROM merchant WHERE merchant_id = ${id}`);
   } catch (error) {
     console.log(error);
-    res.status(400).json({ error: 'There was a problem deleting the merchant from AWS RDS database.'});
+    res.status(400).json({ error: 'There was a problem deleting the merchant from AWS RDS database.' });
   }
   res.status(200).json({ message: 'Successfully deleted merchant.' });
 });
