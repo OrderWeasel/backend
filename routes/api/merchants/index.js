@@ -1,4 +1,6 @@
 const express = require('express');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const format = require('pg-format');
 const db = require('../../../config/db');
 
 const router = express.Router();
@@ -15,17 +17,21 @@ Delete a merchant
 
 // Create a new merchant
 router.post('/', async (req, res) => {
-  const { merchantEmail } = req.body;
-  const { merchantPassword } = req.body;
-  const { merchantRestaurantName } = req.body;
-  const { merchantStreet } = req.body;
-  const { merchantCity } = req.body;
-  const { merchantState } = req.body;
-  const { merchantZip } = req.body;
-  const { merchantPhone } = req.body;
+  const values = [
+    req.body.email,
+    req.body.password,
+    req.body.restaurantName,
+    req.body.street,
+    req.body.city,
+    req.body.state,
+    req.body.zip,
+    req.body.phone,
+  ];
+
+  const text = 'INSERT INTO merchants (email, password, restaurant_name, street, city, state, zip, phone) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)';
 
   try {
-    await db.query(`INSERT INTO merchant (merchant_email, merchant_password, merchant_restaurant_name, merchant_street, merchant_city, merchant_state, merchant_zip, merchant_phone) VALUES ('${merchantEmail}', '${merchantPassword}', '${merchantRestaurantName}', '${merchantStreet}', '${merchantCity}', '${merchantState}', '${merchantZip}', '${merchantPhone}')`);
+    await db.query(text, values);
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: 'There was a problem adding to AWS RDS database.' });
@@ -33,11 +39,27 @@ router.post('/', async (req, res) => {
   res.status(200).json({ message: 'Successfully added merchant to database!' });
 });
 
+// GET a merchant by id
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  const text = 'SELECT * FROM merchants WHERE id = $1';
+  const values = [id];
+  let merchant;
+  try {
+    merchant = await db.query(text, values);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: 'There was a problem adding to AWS RDS database' });
+  }
+  res.status(200).json(merchant.rows);
+});
+
+
 // GET all merchants
 router.get('/', async (req, res) => {
   let allMerchants;
   try {
-    allMerchants = await db.query('SELECT * FROM merchant');
+    allMerchants = await db.query('SELECT * FROM merchants');
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: 'There was a problem adding to AWS RDS database.' });
@@ -47,25 +69,26 @@ router.get('/', async (req, res) => {
 
 // PATCH data on a merchant
 router.patch('/:id', async (req, res) => {
-  const { table } = req.body;
-  const { columnName } = req.body;
-  const { newValue } = req.body;
   const { id } = req.params;
-
+  const { columnName, newValue } = req.body;
+  const sql = format('UPDATE merchants SET %I = %L WHERE id = %s RETURNING *', columnName, newValue, id);
+  let updatedMerchant;
   try {
-    await db.query(`UPDATE ${table} SET ${columnName} = '${newValue}' WHERE merchant_id = ${id}`);
+    updatedMerchant = await db.query(sql);
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: 'There was a problem updating merchant on AWS RDS database.' });
   }
-  res.status(200).json({ message: 'Sucessfully updatd merchant.' });
+  res.status(200).json({ message: 'Sucessfully updated merchant.', updatedMerchant: updatedMerchant.rows[0] });
 });
 
 // Delete a merchant
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
+  const text = 'DELETE FROM merchants WHERE id = $1';
+  const values = [id];
   try {
-    await db.query(`DELETE FROM merchant WHERE merchant_id = ${id}`);
+    await db.query(text, values);
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: 'There was a problem deleting the merchant from AWS RDS database.' });
