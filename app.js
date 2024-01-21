@@ -15,6 +15,7 @@ connectDatabase();
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const merchantsRouter = require('./routes/api/merchants/index');
+const connectSquareRouter = require('./routes/api/connectSquare/index');
 
 const app = express();
 
@@ -32,5 +33,6 @@ app.use('/users', usersRouter);
 
 // API Routes
 app.use('/api/merchants', merchantsRouter);
+app.use('/api/connect-square', connectSquareRouter);
 
 module.exports = app;
