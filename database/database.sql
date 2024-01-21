@@ -18,11 +18,15 @@ CREATE TABLE merchants (
 CREATE TABLE users (
   id SERIAL UNIQUE NOT NULL PRIMARY KEY,
   email VARCHAR(225) UNIQUE NOT NULL,
-  password VARCHAR(225) NOT NULL,
   full_name VARCHAR(255) NOT NULL,
-  street VARCHAR(225) NOT NULL,
-  city VARCHAR(225) NOT NULL,
-  state VARCHAR(2) NOT NULL,
-  zip VARCHAR(5) NOT NULL,
   phone VARCHAR(10) NOT NULL
 );
+
+CREATE TABLE orders (
+  id SERIAL UNIQUE NOT NULL PRIMARY KEY,
+  user_id INT,
+  CONSTRAINT fk_user_id
+    FOREIGN KEY (user_id)
+    REFERENCES (users)
+  items text[]
+)
