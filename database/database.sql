@@ -3,8 +3,8 @@ CREATE DATABASE orderweasel_db
 /* Draft of Production Merchant Table */
 CREATE TABLE merchants (
   id SERIAL UNIQUE NOT NULL PRIMARY KEY,
-  email VARCHAR(225) UNIQUE NOT NULL,
-  password VARCHAR(225) NOT NULL,
+  email VARCHAR(225) UNIQUE NOT NULL CHECK(length(email) >= 4),
+  password VARCHAR(225) NOT NULL CHECK(length(password) >= 8),
   restaurant_name VARCHAR(255) NOT NULL,
   street VARCHAR(225) NOT NULL,
   city VARCHAR(225) NOT NULL,
@@ -12,7 +12,8 @@ CREATE TABLE merchants (
   zip VARCHAR(5) NOT NULL,
   phone VARCHAR(10) NOT NULL,
   sq_access_token VARCHAR(225),
-  sq_refresh_token VARCHAR(225)
+  sq_refresh_token VARCHAR(225),
+  CHECK(email <> password)
 );
 
 CREATE TABLE users (

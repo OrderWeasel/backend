@@ -12,6 +12,22 @@ Update a specific merchant
 Delete a merchant
 */
 
+const emailExists = async (email) => {
+  const text = 'SELECT * FROM merchants WHERE email = $1';
+  const values = [email];
+  let merchant;
+  try {
+    merchant = await db.query(text, values);
+    console.log(merchant);
+    if (merchant.rows.length > 0) {
+      return true;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return false;
+};
+
 const createMerchant = async (req, res) => {
   const values = [
     req.body.email,
@@ -24,15 +40,35 @@ const createMerchant = async (req, res) => {
     req.body.phone,
   ];
 
-  const text = 'INSERT INTO merchants (email, password, restaurant_name, street, city, state, zip, phone) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)';
+  const text = 'INSERT INTO merchants (email, password, restaurant_name, street, city, state, zip, phone) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
+  let newMerchant;
 
   try {
-    await db.query(text, values);
+    // Validate that the email is a valid email
+    // ## CODE HERE ##
+
+    // Validate that the password is strong enough
+    // ## CODE HERE ##
+
+    // Validate that the email does not already exist
+    if (await emailExists(req.body.email)) {
+      res.status(400).json({ message: 'This email is already being used' });
+      return;
+    }
+
+    // Add a new row to the merchant table
+    newMerchant = await db.query(text, values);
   } catch (error) {
     console.log(error);
-    res.status(400).json({ error: 'There was a problem adding to AWS RDS database.' });
+    res.status(400).json({ error: error.message });
+    return;
   }
-  res.status(200).json({ message: 'Successfully added merchant to database!' });
+  res.status(200).json(
+    {
+      message: 'Successfully added merchant to database!',
+      newMerchantDetails: newMerchant.rows[0],
+    },
+  );
 };
 
 const getMerchant = async (req, res) => {
