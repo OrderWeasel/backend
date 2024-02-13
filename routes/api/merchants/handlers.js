@@ -40,7 +40,7 @@ const createMerchant = async (req, res) => {
     req.body.phone,
   ];
 
-  const text = 'INSERT INTO merchants (email, password, restaurant_name, street, city, state, zip, phone) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
+  const text = 'INSERT INTO merchants (email, password, restaurant_name, street, city, state, zip, phone) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, email, restaurant_name, street, city, state, zip, phone';
   let newMerchant;
 
   try {
@@ -73,25 +73,30 @@ const createMerchant = async (req, res) => {
 
 const getMerchant = async (req, res) => {
   const { id } = req.params;
-  const text = 'SELECT * FROM merchants WHERE id = $1';
+  const text = 'SELECT id, email, restaurant_name, street, city, state, zip, phone FROM merchants WHERE id = $1';
   const values = [id];
   let merchant;
   try {
     merchant = await db.query(text, values);
   } catch (error) {
     console.log(error);
-    res.status(400).json({ error: 'There was a problem fetching merchant data.' });
+    res.status(400).json({ error: error.message });
   }
-  res.status(200).json(merchant.rows);
+
+  if (merchant.rows.length < 1) {
+    res.status(400).json({ error: 'There is no merchant with that id.' });
+  } else {
+    res.status(200).json(merchant.rows);
+  }
 };
 
 const getAllMerchants = async (req, res) => {
   let allMerchants;
   try {
-    allMerchants = await db.query('SELECT * FROM merchants');
+    allMerchants = await db.query('SELECT id, email, restaurant_name, street, city, state, zip, phone FROM merchants');
   } catch (error) {
     console.log(error);
-    res.status(400).json({ error: 'There was a problem fetching all merchants data.' });
+    res.status(400).json({ error: error.message });
   }
   res.status(200).json(allMerchants.rows);
 };
@@ -99,13 +104,21 @@ const getAllMerchants = async (req, res) => {
 const updateMerchant = async (req, res) => {
   const { id } = req.params;
   const { columnName, newValue } = req.body;
-  const sql = format('UPDATE merchants SET %I = %L WHERE id = %s RETURNING *', columnName, newValue, id);
+
+  // Respond with error if trying to change id
+  if (columnName === 'id') {
+    res.status(400).json({ error: 'Cannot change id' });
+    return;
+  }
+
+  const sql = format('UPDATE merchants SET %I = %L WHERE id = %s RETURNING email, restaurant_name, street, city, state, zip, phone', columnName, newValue, id);
   let updatedMerchant;
   try {
     updatedMerchant = await db.query(sql);
   } catch (error) {
     console.log(error);
-    res.status(400).json({ error: 'There was a problem updating merchant on AWS RDS database.' });
+    res.status(400).json({ error: error.message });
+    return;
   }
   res.status(200).json({ message: 'Sucessfully updated merchant.', updatedMerchant: updatedMerchant.rows[0] });
 };
@@ -118,7 +131,7 @@ const deleteMerchant = async (req, res) => {
     await db.query(text, values);
   } catch (error) {
     console.log(error);
-    res.status(400).json({ error: 'There was a problem deleting the merchant from AWS RDS database.' });
+    res.status(400).json({ error: error.message });
   }
   res.status(200).json({ message: 'Successfully deleted merchant.' });
 };
