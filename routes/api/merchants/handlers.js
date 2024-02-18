@@ -2,16 +2,6 @@
 const format = require('pg-format');
 const db = require('../../../config/db');
 
-/*
-Merchant
-CRUD
-Create a merchant NOTE: need to encypt password and tokens
-Note: need to determine best practice for storing media files (merchant logo)
-Get all merchants
-Update a specific merchant
-Delete a merchant
-*/
-
 const emailExists = async (email) => {
   const text = 'SELECT * FROM merchants WHERE email = $1';
   const values = [email];
@@ -108,6 +98,12 @@ const updateMerchant = async (req, res) => {
   // Respond with error if trying to change id
   if (columnName === 'id') {
     res.status(400).json({ error: 'Cannot change id' });
+    return;
+  }
+
+  // Respond with "incorrect route" if trying to update password
+  if (columnName === 'password') {
+    res.status(400).json({ error: 'Incorrect route for updating password' });
     return;
   }
 
