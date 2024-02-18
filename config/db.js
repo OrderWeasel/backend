@@ -1,25 +1,43 @@
-const { Pool, Client } = require('pg');
+const { Pool, Client } = require("pg");
+let credentials;
 
 // Database credentials
-const credentials = {
-  user: `${process.env.DB_USER}`,
-  password: `${process.env.DB_PASSWORD}`,
-  host: `${process.env.DB_HOST}`,
-  port: 5432,
-  database: `${process.env.DB_NAME}`,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-};
+if (process.env.ENV === "test") {
+  // testing
+  credentials = {
+    user: `${process.env.TEST_USER}`,
+    password: `${process.env.TEST_PASSWORD}`,
+    host: `${process.env.TEST_HOST}`,
+    port: 5432,
+    database: `${process.env.TEST_DB}`,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  };
+} else {
+  // production
+  credentials = {
+    user: `${process.env.DB_USER}`,
+    password: `${process.env.DB_PASSWORD}`,
+    host: `${process.env.DB_HOST}`,
+    port: 5432,
+    database: `${process.env.DB_NAME}`,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  };
+}
 
 // Connect to database
 const client = new Client(credentials);
 const connectDatabase = async () => {
   try {
     await client.connect();
-    console.log('Connected to database!');
+    console.log(
+      `Connected to ${process.env.ENV} database on: ${credentials.host}!`
+    );
   } catch (error) {
-    console.log('Something went wrong');
+    console.log("Something went wrong");
     console.log(error);
   }
 };
