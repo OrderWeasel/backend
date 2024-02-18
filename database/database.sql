@@ -1,4 +1,9 @@
-CREATE DATABASE orderweasel_db
+/*this creates the database, but the following tables are not created in it*/
+-- CREATE DATABASE orderweasel_db;
+
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS merchants;
 
 /* Draft of Production Merchant Table */
 CREATE TABLE merchants (
@@ -28,6 +33,6 @@ CREATE TABLE orders (
   user_id INT,
   CONSTRAINT fk_user_id
     FOREIGN KEY (user_id)
-    REFERENCES (users)
+    REFERENCES users(id),
   items text[]
-)
+);
