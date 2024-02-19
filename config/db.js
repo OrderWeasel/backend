@@ -6,11 +6,11 @@ let credentials;
 if (process.env.NODE_ENV === 'development') {
   // development
   credentials = {
-    user: `${process.env.TEST_USER}`,
-    password: `${process.env.TEST_PASSWORD}`,
-    host: `${process.env.TEST_HOST}`,
+    user: `${process.env.DEV_USER}`,
+    password: `${process.env.DEV_PASSWORD}`,
+    host: `${process.env.DEV_HOST}`,
     port: 5432,
-    database: `${process.env.TEST_DB}`,
+    database: `${process.env.DEV_DB}`,
     ssl: {
       rejectUnauthorized: false,
     },

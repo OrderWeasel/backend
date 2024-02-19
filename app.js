@@ -52,6 +52,6 @@ app.use('/api/merchants', merchantsRouter);
 app.use('/api/connect-square', connectSquareRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/signup', signupRouter);
-// app.use('api/reset', resetDatabaseRouter);
+// app.use('/api/reset', resetDatabaseRouter);
 
 module.exports = app;
