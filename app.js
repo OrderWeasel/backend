@@ -21,7 +21,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: 'http://localhost:3000/',
+  origin: 'http://localhost:8081/',
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
@@ -31,7 +31,8 @@ const sess = {
   secret: process.env.SECRET,
   cookie: {},
 };
-if (app.get('env') === 'producition') {
+if (process.env.NODE_ENV === 'production') {
+  console.log('In production');
   app.set('trust proxy', 1); // trust first proxy
   sess.cookie.secure = true; // serve secure cookies
 }
