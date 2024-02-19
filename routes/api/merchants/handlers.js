@@ -18,6 +18,21 @@ const emailExists = async (email) => {
   return false;
 };
 
+const idExisits = async (id) => {
+  const text = 'SELECT * FROM merchants WHERE id = $1';
+  const values = [id];
+  let merchant;
+  try {
+    merchant = await db.query(text, values);
+  } catch (error) {
+    console.log(error);
+  }
+  if (merchant.rows.length === 1) {
+    return true;
+  }
+  return false;
+};
+
 const createMerchant = async (req, res) => {
   const values = [
     req.body.email,
@@ -76,7 +91,7 @@ const getMerchant = async (req, res) => {
   if (merchant.rows.length < 1) {
     res.status(400).json({ error: 'There is no merchant with that id.' });
   } else {
-    res.status(200).json(merchant.rows);
+    res.status(200).json(merchant.rows[0]);
   }
 };
 
@@ -124,10 +139,16 @@ const deleteMerchant = async (req, res) => {
   const text = 'DELETE FROM merchants WHERE id = $1';
   const values = [id];
   try {
-    await db.query(text, values);
+    const validId = await idExisits(id);
+    if (validId) {
+      await db.query(text, values);
+    } else {
+      throw Error('Merchant does not exisit.');
+    }
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
+    return;
   }
   res.status(200).json({ message: 'Successfully deleted merchant.' });
 };
