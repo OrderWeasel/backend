@@ -1,9 +1,10 @@
-const { Pool, Client } = require("pg");
+const { Pool, Client } = require('pg');
+
 let credentials;
 
-// Database credentials
-if (process.env.ENV === "test") {
-  // testing
+// Set database credentials for development or production
+if (process.env.NODE_ENV === 'development') {
+  // development
   credentials = {
     user: `${process.env.TEST_USER}`,
     password: `${process.env.TEST_PASSWORD}`,
@@ -14,7 +15,7 @@ if (process.env.ENV === "test") {
       rejectUnauthorized: false,
     },
   };
-} else {
+} else if (process.env.NODE_ENV === 'production') {
   // production
   credentials = {
     user: `${process.env.DB_USER}`,
@@ -33,11 +34,9 @@ const client = new Client(credentials);
 const connectDatabase = async () => {
   try {
     await client.connect();
-    console.log(
-      `Connected to ${process.env.ENV} database on: ${credentials.host}!`
-    );
+    console.log(`Connected to ${process.env.NODE_ENV} database!`);
   } catch (error) {
-    console.log("Something went wrong");
+    console.log('Something went wrong');
     console.log(error);
   }
 };
