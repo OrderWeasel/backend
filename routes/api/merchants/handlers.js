@@ -143,7 +143,7 @@ const deleteMerchant = async (req, res) => {
     if (validId) {
       await db.query(text, values);
     } else {
-      throw Error('Merchant does not exisit.');
+      throw Error('Merchant does not exist.');
     }
   } catch (error) {
     console.log(error);

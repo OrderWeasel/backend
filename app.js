@@ -3,9 +3,9 @@ require('dotenv').config();
 
 const express = require('express');
 const path = require('path');
-const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
+const session = require('express-session');
 const { connectDatabase } = require('./config/db');
 
 // Connect to AWS RDS PostgreSQL database
@@ -19,12 +19,28 @@ const connectSquareRouter = require('./routes/api/connectSquare/index');
 
 const app = express();
 
+// CORS configuration
+const corsOptions = {
+  origin: 'http://localhost:3000/',
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
+
+// Session
+const sess = {
+  secret: process.env.SECRET,
+  cookie: {},
+};
+if (app.get('env') === 'producition') {
+  app.set('trust proxy', 1); // trust first proxy
+  sess.cookie.secure = true; // serve secure cookies
+}
+app.use(session(sess));
+
 // Middleware
-app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
