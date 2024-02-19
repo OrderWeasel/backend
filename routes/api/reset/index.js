@@ -1,5 +1,6 @@
 const express = require('express');
 
+// for development only
 const fs = require('fs');
 const path = require('path');
 const db = require('../../../config/db');
@@ -7,7 +8,7 @@ const db = require('../../../config/db');
 const sqlFilePath = path.resolve('database/database.sql');
 const router = express.Router();
 
-// for development only
+/* eslint-disable no-await-in-loop */
 router.post('/', async (req, res) => {
   try {
     const sqlFile = fs.readFileSync(sqlFilePath, 'utf8');
