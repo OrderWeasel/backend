@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 
 const router = express.Router();
 const {
@@ -7,29 +7,21 @@ const {
   getAllMerchants,
   updateMerchant,
   deleteMerchant,
-  signIn,
-  reset,
-} = require("./handlers");
+} = require('./handlers');
 
 // Create a new merchant
-router.post("/", createMerchant);
-
-// POST sign in credentials
-router.post("/sign-in", signIn);
+router.post('/', createMerchant);
 
 // GET a merchant by id
-router.get("/:id", getMerchant);
+router.get('/:id', getMerchant);
 
 // GET all merchants
-router.get("/", getAllMerchants);
+router.get('/', getAllMerchants);
 
 // PATCH data on a merchant
-router.patch("/:id", updateMerchant);
+router.patch('/:id', updateMerchant);
 
 // Delete a merchant
-router.delete("/:id", deleteMerchant);
-
-// Reset database
-router.post("/reset", reset);
+router.delete('/:id', deleteMerchant);
 
 module.exports = router;
