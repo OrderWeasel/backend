@@ -2,15 +2,11 @@ const express = require('express');
 
 const router = express.Router();
 const {
-  createMerchant,
   getMerchant,
   getAllMerchants,
   updateMerchant,
   deleteMerchant,
 } = require('./handlers');
-
-// Create a new merchant
-router.post('/', createMerchant);
 
 // GET a merchant by id
 router.get('/:id', getMerchant);

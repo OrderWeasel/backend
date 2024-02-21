@@ -32,48 +32,6 @@ const idExists = async (id) => {
   return false;
 };
 
-const createMerchant = async (req, res) => {
-  const values = [
-    req.body.email,
-    req.body.password,
-    req.body.restaurantName,
-    req.body.street,
-    req.body.city,
-    req.body.state,
-    req.body.zip,
-    req.body.phone,
-  ];
-
-  const text = 'INSERT INTO merchants (email, password, restaurant_name, street, city, state, zip, phone) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, email, restaurant_name, street, city, state, zip, phone';
-  let newMerchant;
-  try {
-    // Validate that the email is a valid email
-    // ## CODE HERE ##
-
-    // Validate that the password is strong enough
-    // ## CODE HERE ##
-
-    // Validate that the email does not already exist
-    if (await emailExists(req.body.email)) {
-      res.status(400).json({ message: 'This email is already being used' });
-      return;
-    }
-
-    // Add a new row to the merchant table
-    newMerchant = await db.query(text, values);
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ error: error.message });
-    return;
-  }
-  res.status(200).json(
-    {
-      message: 'Successfully added merchant to database!',
-      newMerchantDetails: newMerchant.rows[0],
-    },
-  );
-};
-
 const getMerchant = async (req, res) => {
   const { id } = req.params;
   const text = 'SELECT id, email, restaurant_name, street, city, state, zip, phone FROM merchants WHERE id = $1';
@@ -159,9 +117,9 @@ const deleteMerchant = async (req, res) => {
 };
 
 module.exports = {
-  createMerchant,
   getMerchant,
   getAllMerchants,
   updateMerchant,
   deleteMerchant,
+  emailExists,
 };
