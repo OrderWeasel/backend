@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
   // Lowercase the email
   const email = req.body.email.toLowerCase();
 
-  // All merchant information should be in the reqest body
+  // All merchant information should be in the request body
   const {
     password,
     restaurantName,
