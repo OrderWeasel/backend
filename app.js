@@ -16,6 +16,9 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const merchantsRouter = require('./routes/api/merchants/index');
 const connectSquareRouter = require('./routes/api/connectSquare/index');
+const signupRouter = require('./routes/api/signup/index');
+const loginRouter = require('./routes/api/login/index');
+const resetDatabaseRouter = require('./routes/api/reset/index');
 
 const app = express();
 
@@ -27,16 +30,12 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Session
-const sess = {
-  secret: process.env.SECRET,
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
   cookie: {},
-};
-if (process.env.NODE_ENV === 'production') {
-  console.log('In production');
-  app.set('trust proxy', 1); // trust first proxy
-  sess.cookie.secure = true; // serve secure cookies
-}
-app.use(session(sess));
+}));
 
 // Middleware
 app.use(logger('dev'));
@@ -51,5 +50,8 @@ app.use('/users', usersRouter);
 // API Routes
 app.use('/api/merchants', merchantsRouter);
 app.use('/api/connect-square', connectSquareRouter);
+app.use('/api/login', loginRouter);
+app.use('/api/signup', signupRouter);
+// app.use('api/reset', resetDatabaseRouter);
 
 module.exports = app;
