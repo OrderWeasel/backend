@@ -55,9 +55,14 @@ router.post('/', async (req, res) => {
         phone,
       ];
       const newMerchant = await db.query(text, values);
+
+      // Set the session.
+      req.session.user = newMerchant.rows[0].id;
+
       res.status(200).json(
         {
           message: 'Successfully added merchant to database!',
+          isLoggedIn: true,
           newMerchantDetails: newMerchant.rows[0],
         },
       );

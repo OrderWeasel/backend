@@ -18,11 +18,13 @@ router.post('/', async (req, res) => {
 
   // Get the hashed pw on the database
   let databasePassword;
-  const text = 'SELECT password FROM merchants WHERE email = $1';
+  let merchant;
+  const text = 'SELECT id, password FROM merchants WHERE email = $1';
   const values = [email];
   try {
     const databaseQuery = await db.query(text, values);
-    databasePassword = databaseQuery.rows[0].password;
+    [merchant] = databaseQuery.rows;
+    databasePassword = merchant.password;
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -30,7 +32,13 @@ router.post('/', async (req, res) => {
   // Validate that given password matches database password
   const match = await bcrypt.compare(password, databasePassword);
   if (match) {
-    res.status(200).json({ message: `Successfully logged in! Welcome back ${email}` });
+    // Set the session.
+    req.session.user = merchant.id;
+
+    res.status(200).json({
+      message: `Successfully logged in! Welcome back ${email}`,
+      isLoggedIn: true,
+    });
   } else {
     res.status(400).json({ error: 'Invalid credentials, try again.' });
   }
