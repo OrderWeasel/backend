@@ -18,6 +18,7 @@ const merchantsRouter = require('./routes/api/merchants/index');
 const connectSquareRouter = require('./routes/api/connectSquare/index');
 const signupRouter = require('./routes/api/signup/index');
 const loginRouter = require('./routes/api/login/index');
+const logoutRouter = require('./routes/api/logout/index');
 const resetDatabaseRouter = require('./routes/api/reset/index');
 
 // Initialize the Node.js Express application:
@@ -73,13 +74,13 @@ app.use(
 
 // Session checker:
 const sessionChecker = (req, res, next) => {
-  console.log(`Session Checker: ${req.session.id}`.green);
+  console.log(`Session Checker: ${req.session.id}`);
   console.log(req.session);
   if (req.session.user) {
-    console.log('Found User Session'.green);
+    console.log('Found User Session');
     next();
   } else {
-    console.log('No User Session Found'.red);
+    console.log('No User Session Found');
     res.status(400).json({ message: 'Please login or sign up to continue.' });
   }
 };
@@ -93,6 +94,7 @@ app.use('/api/merchants', sessionChecker, merchantsRouter);
 app.use('/api/connect-square', connectSquareRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/signup', signupRouter);
+app.use('/api/logout', logoutRouter);
 // app.use('/api/reset', resetDatabaseRouter);
 
 module.exports = app;
