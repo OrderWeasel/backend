@@ -80,7 +80,7 @@ const sessionChecker = (req, res, next) => {
     next();
   } else {
     console.log('No User Session Found'.red);
-    res.status(400).json({ message: 'Please login or sign up to continue.'})
+    res.status(400).json({ message: 'Please login or sign up to continue.' });
   }
 };
 
