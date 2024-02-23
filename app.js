@@ -39,10 +39,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Configure redis client
+// Configure redis client:
 const redisClient = createClient();
 
-// Connect
+// Connect to redis client:
 redisClient.connect().then(console.log('Redis connected!')).catch(console.log);
 
 // Initialize redis store:
@@ -51,7 +51,7 @@ const redisStore = new RedisStore({
   prefix: 'myapp:',
 });
 
-// Session:
+// Session middleware:
 app.use(
   session({
     store: redisStore,
@@ -71,7 +71,7 @@ app.use(
   }),
 );
 
-// Session checker
+// Session checker:
 const sessionChecker = (req, res, next) => {
   console.log(`Session Checker: ${req.session.id}`.green);
   console.log(req.session);
@@ -84,11 +84,11 @@ const sessionChecker = (req, res, next) => {
   }
 };
 
-// Routes
+// Routes:
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// API Routes
+// API Routes:
 app.use('/api/merchants', sessionChecker, merchantsRouter);
 app.use('/api/connect-square', connectSquareRouter);
 app.use('/api/login', loginRouter);
