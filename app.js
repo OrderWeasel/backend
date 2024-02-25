@@ -97,4 +97,10 @@ app.use('/api/signup', signupRouter);
 app.use('/api/logout', logoutRouter);
 // app.use('/api/reset', resetDatabaseRouter);
 
+// 404 Resource not found:
+// eslint-disable-next-line no-unused-vars
+app.use((req, res, next) => {
+  res.status(404).json({ error: 'Resource Not Found.' });
+});
+
 module.exports = app;
