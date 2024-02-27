@@ -39,6 +39,9 @@ router.post('/', async (req, res) => {
     return;
   }
 
+  // Get the initial session data
+  const initialSessionData = req.session;
+
   // Hash the password with a salt and save merchant to database
   const saltRounds = 10;
   bcrypt.hash(password, saltRounds, async (err, hash) => {
@@ -56,16 +59,25 @@ router.post('/', async (req, res) => {
       ];
       const newMerchant = await db.query(text, values);
 
-      // Set the session.
-      req.session.user = newMerchant.rows[0].id;
+      // Regenerate the session
+      req.session.regenerate((error) => {
+        // Will have new session here
+        if (error) throw Error(error.message);
 
-      res.status(200).json(
-        {
-          message: 'Successfully added merchant to database!',
-          isLoggedIn: true,
-          newMerchantDetails: newMerchant.rows[0],
-        },
-      );
+        // Replace data from previous session to new session
+        Object.assign(req.session, initialSessionData);
+
+        // Set user proper to the merchant id
+        req.session.user = newMerchant.rows[0].id;
+
+        res.status(200).json(
+          {
+            message: 'Successfully added merchant to database!',
+            isLoggedIn: true,
+            newMerchantDetails: newMerchant.rows[0],
+          },
+        );
+      });
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

@@ -29,15 +29,30 @@ router.post('/', async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 
+  // Reference the initial session data
+  const initialSessionData = req.session;
+
   // Validate that given password matches database password
   const match = await bcrypt.compare(password, databasePassword);
   if (match) {
-    // Set the session.
-    req.session.user = merchant.id;
+    // Regenerate the session.
+    req.session.regenerate((error) => {
+      // Will have new session here
+      if (error) throw Error(error.message);
+      try {
+        // Replace data from initial session to new session
+        Object.assign(req.session, initialSessionData);
 
-    res.status(200).json({
-      message: `Successfully logged in! Welcome back ${email}`,
-      isLoggedIn: true,
+        // Set user property to the merchant id
+        req.session.user = merchant.id;
+      } catch (err) {
+        console.log(err);
+      }
+
+      res.status(200).json({
+        message: `Successfully logged in! Welcome back ${email}`,
+        isLoggedIn: true,
+      });
     });
   } else {
     res.status(400).json({ error: 'Invalid credentials, try again.' });
