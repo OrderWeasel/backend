@@ -72,7 +72,7 @@ app.use(
   }),
 );
 
-// Session checker:
+// Session checker (validate that user is authenticated):
 const sessionChecker = (req, res, next) => {
   console.log(`Session Checker: ${req.session.id}`);
   console.log(req.session);
@@ -90,8 +90,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 // API Routes:
-app.use('/api/merchants', sessionChecker, merchantsRouter);
-app.use('/api/connect-square', connectSquareRouter);
+app.use('/api/merchants', merchantsRouter);
+app.use('/api/connect-square', sessionChecker, connectSquareRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/signup', signupRouter);
 app.use('/api/logout', logoutRouter);
