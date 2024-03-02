@@ -16,6 +16,7 @@ CREATE TABLE merchants (
   state VARCHAR(2) NOT NULL,
   zip VARCHAR(5) NOT NULL,
   phone VARCHAR(10) NOT NULL,
+  code_verifier VARCHAR(225),
   sq_access_token VARCHAR(225),
   sq_refresh_token VARCHAR(225),
   CHECK(email <> password)
