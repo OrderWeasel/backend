@@ -19,6 +19,7 @@ const connectSquareRouter = require('./routes/api/connectSquare/index');
 const signupRouter = require('./routes/api/signup/index');
 const loginRouter = require('./routes/api/login/index');
 const logoutRouter = require('./routes/api/logout/index');
+const oauthRedirectRouter = require('./routes/api/oauthRedirect/index');
 const resetDatabaseRouter = require('./routes/api/reset/index');
 
 // Initialize the Node.js Express application:
@@ -74,13 +75,9 @@ app.use(
 
 // Session checker (validate that user is authenticated):
 const sessionChecker = (req, res, next) => {
-  console.log(`Session Checker: ${req.session.id}`);
-  console.log(req.session);
   if (req.session.user) {
-    console.log('Found User Session');
     next();
   } else {
-    console.log('No User Session Found');
     res.status(400).json({ message: 'Please login or sign up to continue.' });
   }
 };
@@ -95,6 +92,7 @@ app.use('/api/connect-square', sessionChecker, connectSquareRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/signup', signupRouter);
 app.use('/api/logout', logoutRouter);
+app.use('/api/oauth-redirect', oauthRedirectRouter);
 // app.use('/api/reset', resetDatabaseRouter);
 
 // 404 Resource not found:
