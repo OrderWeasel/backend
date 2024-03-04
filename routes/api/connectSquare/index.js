@@ -48,7 +48,7 @@ router.get('/geturl/:id', async (req, res) => {
   }
 
   // Respond with Square authroization URL
-  res.status(200).json({ codeVerifier, codeChallenge, url });
+  res.status(200).json({ url });
 });
 
 module.exports = router;
