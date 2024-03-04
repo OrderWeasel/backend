@@ -1,25 +1,27 @@
-const CryptoJS = require('crypto-js');
-const crypto = require('node:crypto');
+/* eslint-disable func-names */
 
-function base64URLEncode(str) {
+const CryptoJS = require('crypto-js');
+const { randomBytes } = require('node:crypto');
+
+const base64URLEncode = function (str) {
   return str.toString('base64')
     .replace(/\+/g, '-')
     .replace(/\//g, '_')
     .replace(/=/g, '');
-}
+};
 
-function generateCodeVerifier() {
-  return base64URLEncode(crypto.randomBytes(32));
-}
+const generateCodeVerifier = function () {
+  return base64URLEncode(randomBytes(32));
+};
 
-function base64URL(string) {
+const base64URL = function (string) {
   return string.toString(CryptoJS.enc.Base64).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
-}
+};
 
-function generateCodeChallenge(codeVerifier) {
+const generateCodeChallenge = function (codeVerifier) {
   const codeChallenge = base64URL(CryptoJS.SHA256(codeVerifier));
   return codeChallenge;
-}
+};
 
 module.exports = {
   generateCodeVerifier,
