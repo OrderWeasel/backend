@@ -5,6 +5,7 @@ const router = express.Router();
 
 const { createClient } = require('redis');
 const db = require('../../../config/db');
+const { saveTokens } = require('./helpers');
 
 const urlToParamObject = (url) => {
   const paramObject = {};
@@ -123,6 +124,9 @@ router.get('/', async (req, res) => {
         codeVerifier,
       );
       console.log(tokens);
+
+      // Save tokens
+      saveTokens(tokens, req.session.user);
     } catch (err) {
       console.log(err);
     }
