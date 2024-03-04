@@ -68,7 +68,7 @@ app.use(
       httpOnly: false,
       // Session max age in milliseconds. (1 min)
       // Calculates the Expires Set-Cookie attribute
-      maxAge: 600000,
+      maxAge: 7200000,
     },
   }),
 );
