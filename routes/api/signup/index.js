@@ -19,6 +19,7 @@ router.post('/', async (req, res) => {
     state,
     zip,
     phone,
+    estimatedMinutesForPickup,
   } = req.body;
 
   // Ensure that the email is a valid email
@@ -46,7 +47,7 @@ router.post('/', async (req, res) => {
   const saltRounds = 10;
   bcrypt.hash(password, saltRounds, async (err, hash) => {
     try {
-      const text = 'INSERT INTO merchants (email, password, restaurant_name, street, city, state, zip, phone) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, email, restaurant_name, street, city, state, zip, phone';
+      const text = 'INSERT INTO merchants (email, password, restaurant_name, street, city, state, zip, phone, estimated_minutes_for_pickup) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id, email, restaurant_name, street, city, state, zip, phone, estimated_minutes_for_pickup';
       const values = [
         email,
         hash,
@@ -56,6 +57,7 @@ router.post('/', async (req, res) => {
         state,
         zip,
         phone,
+        estimatedMinutesForPickup,
       ];
       const newMerchant = await db.query(text, values);
 

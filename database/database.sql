@@ -16,10 +16,13 @@ CREATE TABLE merchants (
   state VARCHAR(2) NOT NULL,
   zip VARCHAR(5) NOT NULL,
   phone VARCHAR(10) NOT NULL,
+  estimated_minutes_for_pickup INTEGER NOT NULL,
   code_verifier VARCHAR(225),
   sq_access_token VARCHAR(225),
   sq_refresh_token VARCHAR(225),
-  CHECK(email <> password)
+  CHECK(email <> password),
+  CHECK(estimated_minutes_for_pickup > 0),
+  CHECK(estimated_minutes_for_pickup < 61)
 );
 
 CREATE TABLE users (

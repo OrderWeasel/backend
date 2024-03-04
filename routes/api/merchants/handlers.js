@@ -34,7 +34,7 @@ const idExists = async (id) => {
 
 const getMerchant = async (req, res) => {
   const { id } = req.params;
-  const text = 'SELECT id, email, restaurant_name, street, city, state, zip, phone FROM merchants WHERE id = $1';
+  const text = 'SELECT id, email, restaurant_name, street, city, state, zip, phone, estimated_minutes_for_pickup FROM merchants WHERE id = $1';
   const values = [id];
   let merchant;
   try {
@@ -54,7 +54,7 @@ const getMerchant = async (req, res) => {
 const getAllMerchants = async (req, res) => {
   let allMerchants;
   try {
-    allMerchants = await db.query('SELECT id, email, restaurant_name, street, city, state, zip, phone FROM merchants');
+    allMerchants = await db.query('SELECT id, email, restaurant_name, street, city, state, zip, phone, estimated_minutes_for_pickup FROM merchants');
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
