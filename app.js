@@ -20,6 +20,7 @@ const signupRouter = require('./routes/api/signup/index');
 const loginRouter = require('./routes/api/login/index');
 const logoutRouter = require('./routes/api/logout/index');
 const oauthRedirectRouter = require('./routes/api/oauthRedirect/index');
+const itemsRouter = require('./routes/api/items/index');
 const resetDatabaseRouter = require('./routes/api/reset/index');
 
 // Initialize the Node.js Express application:
@@ -93,6 +94,7 @@ app.use('/api/login', loginRouter);
 app.use('/api/signup', signupRouter);
 app.use('/api/logout', logoutRouter);
 app.use('/api/oauth-redirect', oauthRedirectRouter);
+app.use('/api/merchants', itemsRouter);
 // app.use('/api/reset', resetDatabaseRouter);
 
 // 404 Resource not found:
