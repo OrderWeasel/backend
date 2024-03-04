@@ -74,8 +74,8 @@ app.use(
   }),
 );
 
-// Session checker (validate that user is authenticated):
-const sessionChecker = (req, res, next) => {
+// Auth checker (validate that user is authenticated):
+const authChecker = (req, res, next) => {
   if (req.session.user) {
     next();
   } else {
@@ -89,7 +89,7 @@ app.use('/users', usersRouter);
 
 // API Routes:
 app.use('/api/merchants', merchantsRouter);
-app.use('/api/connect-square', sessionChecker, connectSquareRouter);
+app.use('/api/connect-square', authChecker, connectSquareRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/signup', signupRouter);
 app.use('/api/logout', logoutRouter);
