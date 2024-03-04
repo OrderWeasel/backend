@@ -63,7 +63,7 @@ router.get('/:merchantId/items', initializeSession, async (req, res) => {
     // Create a simplified version of the catalog
     onlyItems = onlyItems.map((item) => {
       const simpleList = {};
-      simpleList.id = item.id;
+      // simpleList.id = item.id;
       simpleList.name = item.item_data.name;
 
       // Find the category name

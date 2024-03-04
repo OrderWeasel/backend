@@ -25,18 +25,31 @@ CREATE TABLE merchants (
   CHECK(estimated_minutes_for_pickup < 61)
 );
 
-CREATE TABLE users (
-  id SERIAL UNIQUE NOT NULL PRIMARY KEY,
-  email VARCHAR(225) UNIQUE NOT NULL,
-  full_name VARCHAR(255) NOT NULL,
-  phone VARCHAR(10) NOT NULL
-);
-
 CREATE TABLE orders (
   id SERIAL UNIQUE NOT NULL PRIMARY KEY,
-  user_id INT,
-  CONSTRAINT fk_user_id
-    FOREIGN KEY (user_id)
-    REFERENCES users(id),
-  items text[]
+  customer_name VARCHAR(225) NOT NULL,
+  customer_phone VARCHAR(225) NOT NULL,
+  time_placed TIMESTAMPTZ NOT NULL,
+  status VARCHAR(225),
+);
+
+CREATE TABLE orderitems (
+  id SERIAL UNIQUE NOT NULL PRIMARY KEY,
+  order_id INT NOT NULL,
+  item_id INT NOT NULL,
+  CONSTRAINT (fk_order_id) FOREIGN KEY (order_id) REFERENCES orders(id),
+  CONSTRAINT (fk_item_id) FOREIGN KEY (item_id) REFERENCES item(id),
+)
+
+CREATE TABLE items (
+  id SERIAL UNIQUE NOT NULL PRIMARY KEY,
+  sq_variation_id VARCHAR(225) UNIQUE,
+  name VARCHAR(225) NOT NULL,
+  variation_name VARCHAR(225) NOT NULL,
+  category VARCHAR(225) NOT NULL,
+  description VARCHAR(225),
+  merchant_id INT,
+  price INTEGER NOT NULL,
+  CONSTRAINT (fk_merchant_id) FOREIGN KEY (merchant_id) REFERENCES merchants(id),
+  CHECK(price > 0)
 );
