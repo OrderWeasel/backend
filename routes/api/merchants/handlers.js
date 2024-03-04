@@ -122,4 +122,5 @@ module.exports = {
   updateMerchant,
   deleteMerchant,
   emailExists,
+  idExists,
 };
