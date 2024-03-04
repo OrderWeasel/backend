@@ -10,7 +10,7 @@ const {
 
 // Initialize session
 const initializeSession = (req, res, next) => {
-  if (!req.session.init) {
+  if (!req.session) {
     req.session.init = true;
   }
   return next();
