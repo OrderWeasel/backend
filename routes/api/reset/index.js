@@ -14,11 +14,11 @@ router.post('/', async (req, res) => {
     const sqlFile = fs.readFileSync(sqlFilePath, 'utf8');
     const commands = sqlFile.split(';');
 
-    for (let i = 0; i < commands.length; i++) {
-      let command = commands[i];
+    for (let i = 0; i < commands.length; i += 1) {
+      const command = commands[i];
       await db.query(command);
     }
-    
+
     res.status(200).json({ success: 'Database reset successfully...' });
   } catch (e) {
     console.log(e);
