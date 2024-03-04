@@ -11,7 +11,9 @@ const encryptToken = function (token) {
   const iv = randomBytes(16).toString('hex').substring(0, 16);
 
   const cipher = createCipheriv(algorithm, process.env.ENCRYPT_KEY, iv);
-  const encrypted = cipher.update(token, 'utf8', 'hex');
+  let encrypted = cipher.update(token, 'utf8', 'hex');
+
+  encrypted += cipher.final('hex');
 
   return {
     iv,
