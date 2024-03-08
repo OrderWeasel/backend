@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const express = require('express');
 const crypto = require('node:crypto');
 const format = require('pg-format');
@@ -7,6 +8,23 @@ const { generateCodeVerifier, generateCodeChallenge } = require('./helpers');
 
 const router = express.Router();
 
+const authorizationCompleted = async (id) => {
+  const text = 'SELECT sq_access_token FROM merchants WHERE id = $1';
+  const values = [id];
+
+  try {
+    const result = await db.query(text, values);
+    const { sq_access_token } = result.rows[0];
+    console.log(result.rows[0].sq_access_token);
+    if (sq_access_token) {
+      return true;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  return false;
+};
+
 router.get('/geturl/:id', async (req, res) => {
   const { id } = req.params;
 
@@ -15,7 +33,11 @@ router.get('/geturl/:id', async (req, res) => {
   redisClient.connect();
 
   // Check if merchant has already provided authorization,
-  // if so, send appropriate response. Else:
+  // if so, send appropriate response.
+  if (authorizationCompleted(id)) {
+    res.status(400).json({ message: 'Merchant has already completed authorization process' });
+    return;
+  }
 
   // Generate nonce
   const nonce = crypto.randomBytes(16).toString('base64');
