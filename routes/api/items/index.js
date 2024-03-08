@@ -9,7 +9,7 @@ const { idExists } = require('../merchants/handlers');
 
 // Initialize session if not yet initialized
 const initializeSession = (req, res, next) => {
-  if (!req.session) {
+  if (req.session.init !== true) {
     req.session.init = true;
   }
   return next();
