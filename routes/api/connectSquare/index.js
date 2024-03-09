@@ -29,17 +29,17 @@ const authorizationCompleted = async (id) => {
 router.get('/geturl/:id', async (req, res) => {
   const { id } = req.params;
 
-  // Connect to Redis client
-  const redisClient = createClient();
-  redisClient.connect();
-
   // Check if merchant has already provided authorization,
   // if so, send appropriate response.
   const oAuthCompleted = await authorizationCompleted(id);
   if (oAuthCompleted) {
-    res.status(400).json({ message: 'Merchant has already completed authorization process' });
+    res.status(400).json({ message: 'Merchant has already completed Square authorization process' });
     return;
   }
+
+  // Connect to Redis client
+  const redisClient = createClient();
+  redisClient.connect();
 
   // Generate nonce
   const nonce = crypto.randomBytes(16).toString('base64');
