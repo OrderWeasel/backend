@@ -2,7 +2,7 @@
 
 ## Description
 
-OrderWeasel is a web application that integrates with Square to provide convienent pick-up orders.
+OrderWeasel is an application that integrates with Square to provide convienent pick-up orders.
 
 ## Quick Start
 
@@ -19,4 +19,8 @@ npm run server
 ```
 
 ## Usage
-We recommend using `Postman` to test the API routes which allow you to sign up, login, integrate with Square, retrieve menu items, and create orders.
+We recommend `Postman` to call the API routes for signing up, logging in, integrating with Square, retrieving menu items, and creating orders.
+
+** Authors
+[Steven Kwan](https://github.com/stkwan)
+[Forrest Klausmeier](https://github.com/fwklaus)
