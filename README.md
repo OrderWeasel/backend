@@ -19,8 +19,8 @@ npm run server
 ```
 
 ## Usage
-We recommend `Postman` to call the API routes for signing up, logging in, integrating with Square, retrieving menu items, and creating orders.
+We recommend using `Postman` to test the API routes which allow users to sign up, login, integrate with Square, retrieve menu items, and create orders.
 
-** Authors
-[Steven Kwan](https://github.com/stkwan)
+## Authors
+[Steven Kwan](https://github.com/stkwan),
 [Forrest Klausmeier](https://github.com/fwklaus)
