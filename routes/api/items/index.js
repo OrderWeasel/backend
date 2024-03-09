@@ -7,6 +7,24 @@ const { decryptToken } = require('../oauthRedirect/helpers');
 const db = require('../../../config/db');
 const { idExists } = require('../merchants/handlers');
 
+const authorizationCompleted = async (id) => {
+  const text = 'SELECT sq_access_token FROM merchants WHERE id = $1';
+  const values = [id];
+
+  try {
+    const result = await db.query(text, values);
+    const { sq_access_token } = result.rows[0];
+    console.log(result.rows[0].sq_access_token);
+    if (sq_access_token && sq_access_token.length > 0) {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
 // Initialize session if not yet initialized
 const initializeSession = (req, res, next) => {
   if (req.session.init !== true) {
@@ -23,6 +41,13 @@ router.get('/:merchantId/items', initializeSession, async (req, res) => {
   const validId = await idExists(merchantId);
   if (!validId) {
     res.status(400).json({ error: 'Merchant does not exist.' });
+    return;
+  }
+
+  // Validate that merchant has completed integration
+  const oauthCompleted = await authorizationCompleted(merchantId);
+  if (!oauthCompleted) {
+    res.status(400).json({ error: 'Merchant has not completed the authorization process' });
     return;
   }
 
