@@ -130,7 +130,7 @@ router.get('/', async (req, res) => {
     } catch (err) {
       console.log(err);
     }
-    res.status(200).json({ message: 'Success!' });
+    res.status(200).json({ message: 'You have successfully integrated your Square account!' });
   });
 });
 
