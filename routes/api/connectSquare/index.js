@@ -16,13 +16,14 @@ const authorizationCompleted = async (id) => {
     const result = await db.query(text, values);
     const { sq_access_token } = result.rows[0];
     console.log(result.rows[0].sq_access_token);
-    if (sq_access_token) {
+    if (sq_access_token && sq_access_token.length > 0) {
       return true;
     }
+    return false;
   } catch (error) {
     console.log(error);
+    return false;
   }
-  return false;
 };
 
 router.get('/geturl/:id', async (req, res) => {
@@ -34,7 +35,8 @@ router.get('/geturl/:id', async (req, res) => {
 
   // Check if merchant has already provided authorization,
   // if so, send appropriate response.
-  if (authorizationCompleted(id)) {
+  const oAuthCompleted = await authorizationCompleted(id);
+  if (oAuthCompleted) {
     res.status(400).json({ message: 'Merchant has already completed authorization process' });
     return;
   }
